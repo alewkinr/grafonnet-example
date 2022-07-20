@@ -1,0 +1,21 @@
+# https://taskfile.dev
+
+version: '3'
+
+dotenv: [ '.env' ]
+
+tasks:
+
+  build:
+    desc: Установка зависимостей и сборка пакетов для Mac OS Apple Silicon
+    cmds:
+      - go install -a github.com/jsonnet-bundler/jsonnet-bundler/cmd/jb@latest
+      - jb install
+      - curl -fSL -o "/usr/local/bin/grr" "https://github.com/grafana/grizzly/releases/download/v0.2.0/grr-darwin-amd64"
+      - chmod a+x "/usr/local/bin/grr"
+      - grr --help
+
+  deploy:
+    desc: Подготовка и публикация дашборда в Grafana
+    cmds:
+      - grr apply template.jsonnet
